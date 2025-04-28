@@ -1,0 +1,22 @@
+/* src/styles/toast.css */
+.Toastify__toast {
+    font-size: 1.25rem !important;
+    min-height: 80px !important;
+    padding: 1rem !important;
+    border-radius: 12px !important;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .Toastify__toast {
+      min-width: 90vw !important;
+      margin: 0.5rem !important;
+      font-size: 1rem !important;
+    }
+  }
+  
+  /* Posición fija arriba-derecha */
+  .Toastify__toast-container {
+    top: 1em;
+    right: 1em;
+  }
