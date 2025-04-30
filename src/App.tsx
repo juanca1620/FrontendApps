@@ -1,11 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import './ReactToastify.css'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import React from 'react';
 import Login from "./pages/Login";
+import { UserProvider, useUser } from './context/UserContext';
+import ProtectedRoute from './components/auth/ProjetedRoute';
+import AdminHome from './pages/AdminHome';
+import GestionClientes from './pages/GestionClientes';
 
 function App() {
+
   return (
 
     <>
@@ -22,12 +27,22 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
+      <UserProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/admin" />} />
+            <Route path="/login" element={<Login />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/admin" element={<AdminHome />} />
+              <Route path="/admin/clientes" element={<GestionClientes/>} />
+            </Route>
+
+            <Route path="*" element={<h1>Seccion no encontrada</h1>} />
+          </Routes>
+        </BrowserRouter>
+      </UserProvider>
     </>
+
   );
 }
 

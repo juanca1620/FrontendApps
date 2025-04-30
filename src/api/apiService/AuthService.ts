@@ -14,7 +14,7 @@ const login = async (data: LoginDto): Promise<ApiResponse<VeterinariaResponseDto
     } catch (error) {
         console.log(error)
         return {
-            status: 500,
+            status: error.response.status,
             dataError: error.response?.data.mensaje || 'Error de conexión',
             success: false
         };

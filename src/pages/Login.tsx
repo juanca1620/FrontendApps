@@ -3,10 +3,16 @@ import LoginForm from "../components/LoginForm";
 import useAuth from "../hooks/useAuth";
 import LoginDto from "../dto/LoginDto";
 import { toast } from "react-toastify";
+import { useUser } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
     const { login, isLoading, error, response } = useAuth();
+
+    const { guardarUser } = useUser();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -42,9 +48,13 @@ function Login() {
 
     useEffect(() => {
         let toastId;
+
         if (response) {
             toastId = toast.success("Bienvenido a la app de veterinaria")
+            guardarUser(response);
+            navigate("/admin")
         }
+
         return () => {
             toast.dismiss(toastId);
         }
