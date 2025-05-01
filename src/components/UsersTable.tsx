@@ -15,7 +15,6 @@ const columns: GridColDef<ClienteResponseDto>[] = [
 ];
 
 export default function ClientTable(info:{clientes: ClienteResponseDto[]}) {
-  console.log(info.clientes)
 
   const {clientes} = info
 
