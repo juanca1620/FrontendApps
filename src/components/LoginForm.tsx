@@ -9,8 +9,8 @@ const loginForm = ({onSumit , loading}) => {
 
     return (
         <form onSubmit={(e) => {
-            e.preventDefault(); 
-            onSumit({ correo, contrasenna });
+            e.preventDefault();  // ✋ Detiene el refresco automático
+            onSumit({ correo, contrasenna }); // 👉 Ahora sí mandamos los datos
         }}>
         <div>
             <label htmlFor="correo">Correo</label>

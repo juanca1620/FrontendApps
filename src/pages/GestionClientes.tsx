@@ -6,13 +6,15 @@ import { useUser } from "../context/UserContext";
 import { toast } from "react-toastify"
 import UserCrudForm from "../components/UserCrudForm";
 import ClienteCreateDto from "../dto/ClienteCreateDto";
+import { ClienteResponseDto } from "../dto/ClienteResponseDto";
+import ClienteUpdateDto from "../dto/ClienteUpdateDto";
 
 const GestionClientes = () => {
 
     const { user } = useUser();
 
     const veterinariaId = user!.id;
-    const { clientes, isLoading, error, crearCliente } = useClientes(veterinariaId)
+    const { clientes, isLoading, error, crearCliente , eliminarCliente ,buscarCliente,editarCliente} = useClientes(veterinariaId)
 
     useEffect(() => {
         toast.info("Estamos trayendo los clientes de tu veterinaria, por favor paciencia");
@@ -57,11 +59,30 @@ const GestionClientes = () => {
         }
     }
 
+    const deleteCliente = async (id : number) => {
+        const clienteF = await eliminarCliente(id);
+        console.log(clienteF)
+        if (clienteF) {
+            toast.success("Cliente eliminado con exito")
+        }
+    }
+
+    const getCliente = async (id : number):Promise<ClienteResponseDto | null> => {
+        const clienteF = await buscarCliente(id);
+        return clienteF;
+    }
+
+    const updateCliente = async (cliente : ClienteUpdateDto) => {
+        const clienteF = await editarCliente(cliente);
+        return clienteF;
+    }
+
+
     return (
         <div className="container">
             <h1>Gestión de Clientes</h1>
             <p>Aquí puedes gestionar los datos de tus clientes.</p>
-            <UserCrudForm veterinariaId={user!.id} createCliente={createCliente}></UserCrudForm>
+            <UserCrudForm veterinariaId={user!.id} createCliente={createCliente} deleteCliente={deleteCliente} findCliente={getCliente} updateCliente={updateCliente} ></UserCrudForm>
             <UsersTable clientes={clientes}></UsersTable>
             <LogOutButton />
         </div>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ClienteValidator from "../validator/validators/ClienteValidator";
 import ClienteService from "../api/apiService/ClienteService";
 import ClienteCreateDto from "../dto/ClienteCreateDto";
+import ClienteUpdateDto from "../dto/ClienteUpdateDto";
 
 
 export default function useClientes (veterinariaId: number):{
@@ -10,6 +11,9 @@ export default function useClientes (veterinariaId: number):{
     isLoading: boolean;
     error: string;
     crearCliente: (cliente: ClienteCreateDto) => Promise<ClienteResponseDto | null>;
+    eliminarCliente: (id : number) => Promise<ClienteResponseDto | null>;
+    buscarCliente: (id : number) => Promise<ClienteResponseDto | null>;
+    editarCliente: (cliente:ClienteUpdateDto) => Promise<ClienteResponseDto | null>
   } {
 
     const [clientes, setClientes] = useState<ClienteResponseDto[]>([]);
@@ -62,10 +66,74 @@ export default function useClientes (veterinariaId: number):{
         return response.data!;
     }
 
+    const eliminarCliente = async (id:number): Promise<ClienteResponseDto | null> => {
+        setIsLoading(true);
+        setError("")
+
+        const response = await ClienteService.eliminarCliente(id);
+
+        if (!response.success) {
+            setIsLoading(false);
+            setError(response.dataError!)
+            return null;
+        }
+        
+        setIsLoading(false);
+        obtenerClientes();
+        return response.data!;
+    }
+
+    const buscarCliente = async (id:number): Promise<ClienteResponseDto | null> => {
+        setIsLoading(true);
+        setError("")
+
+        const response = await ClienteService.obtenerCliente(id);
+
+        if (!response.success) {
+            setIsLoading(false);
+            setError(response.dataError!)
+            return null;
+        }
+        
+        setIsLoading(false);
+        obtenerClientes();
+        return response.data!;
+    }
     useEffect(() => {
         obtenerClientes();
     }, []);
 
-    return { clientes, isLoading, error,crearCliente };
+    const editarCliente = async (cliente:ClienteUpdateDto):Promise<ClienteResponseDto | null> => {
+        setIsLoading(true);
+        setError("")
+
+
+        const validations = await ClienteValidator.validateUpdateCliente(cliente);
+
+        if(!validations.success){
+            setIsLoading(false);
+            setError(validations.errors![0])
+            return null;
+        }
+
+        console.log(validations)
+
+        const response = await ClienteService.editarCliente(cliente);
+
+        console.log(response)
+        
+
+        if (!response.success) {
+            setIsLoading(false);
+            setError(response.dataError!)
+            return null;
+        }
+        
+        setIsLoading(false);
+        obtenerClientes();
+        return response.data!;
+    }
+
+    return { clientes, isLoading, error, crearCliente, eliminarCliente, buscarCliente , editarCliente};
 
 }
