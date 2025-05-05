@@ -1,19 +1,18 @@
-import React, { use, useEffect } from "react";
-import LoginForm from "../components/LoginForm";
+import React, { useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import useAuth from "../hooks/useAuth";
-import LoginDto from "../dto/LoginDto";
-import { toast } from "react-toastify";
 import { useUser } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import VeterinariaCreateDto from "../dto/VeterinariaCreateDto";
+import RegisterForm from "../components/RegisterForm";
 
-function Login() {
-
-    const { login, isLoading, error, response } = useAuth();
-
-    const { guardarUser } = useUser();
+export default function () {
 
     const navigate = useNavigate();
 
+    const { register, isLoading, error, response } = useAuth();
+
+    const { guardarUser } = useUser();
     useEffect(() => {
 
         let toastId;
@@ -60,18 +59,12 @@ function Login() {
         }
     }, [response])
 
-    const onSumit = async (loginDto: LoginDto) => {
-        await login(loginDto);
+    const onSummit = async (veterinaria: VeterinariaCreateDto) => {
+        await register(veterinaria);
     }
 
-    const registerButtonHandler = () => {
-        navigate("/register")
-    }
     return (
-        <>
-            <LoginForm onSumit={onSumit} loading={isLoading} />
-            <button onClick={registerButtonHandler}>Registrarse</button>
-        </>);
+        <><h1> Registro </h1>
+        <RegisterForm loading={isLoading} onSumit={onSummit}></RegisterForm></>
+    )
 }
-
-export default Login;

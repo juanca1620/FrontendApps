@@ -8,6 +8,7 @@ import { UserProvider, useUser } from './context/UserContext';
 import ProtectedRoute from './components/auth/ProjetedRoute';
 import AdminHome from './pages/AdminHome';
 import GestionClientes from './pages/GestionClientes';
+import RegisterPage from './pages/RegisterPage';
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/admin" />} />
             <Route path="/login" element={<Login />} />
+            <Route path='/register' element = {<RegisterPage/>} />
             <Route element={<ProtectedRoute />}>
               <Route path="/admin" element={<AdminHome />} />
               <Route path="/admin/clientes" element={<GestionClientes/>} />

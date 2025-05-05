@@ -5,6 +5,7 @@ import AuthService from '../api/apiService/AuthService';
 import AuthValidator from '../validator/validators/AuthValidator';
 import validationResponse from '../validator/ValidatoResponse';
 import { VeterinariaResponseDto } from '../dto/VeterinariaResponseDto';
+import VeterinariaCreateDto from '../dto/VeterinariaCreateDto';
 
 export default function useAuth() {
     const [response, setResponse] = useState<VeterinariaResponseDto | undefined>(undefined);
@@ -23,7 +24,6 @@ export default function useAuth() {
         if (!validationResponse.success) {
             setError(validationResponse.errors?.[0] || "Error desconocido")
             setIsLoading(false);
-            console.log("llego" + validationResponse.errors?.[0])
             return;
         }
         console.log(validationResponse)
@@ -39,5 +39,28 @@ export default function useAuth() {
         setResponse(response.data);
     }
 
-    return {response,isLoading,error,login}
+    const register = async (veterinaria:VeterinariaCreateDto) => {
+        setError("");
+        setIsLoading(true);
+
+        const validationResponse: validationResponse = await AuthValidator.validateRegister(veterinaria)
+        if (!validationResponse.success) {
+            setError(validationResponse.errors?.[0] || "Error desconocido")
+            setIsLoading(false);
+            return;
+        }
+        console.log(validationResponse)
+
+        const response = await AuthService.register(veterinaria)
+
+        if (!response.success) {
+            setIsLoading(false);
+            setError(response.dataError || "Error desconocido")
+            return;
+        }
+
+        setResponse(response.data);
+    }
+
+    return {response,isLoading,error,login,register}
 }

@@ -9,15 +9,15 @@ const loginForm = ({onSumit , loading}) => {
 
     return (
         <form onSubmit={(e) => {
-            e.preventDefault();  // ✋ Detiene el refresco automático
-            onSumit({ correo, contrasenna }); // 👉 Ahora sí mandamos los datos
+            e.preventDefault();
+            onSumit({ correo, contrasenna }); 
         }}>
         <div>
             <label htmlFor="correo">Correo</label>
             <input type="text" id="correo" name="correo" required onChange={(e) => setCorreo(e.target.value)}/>
         </div>
         <div>
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Contraseña</label>
             <input type="password" id="password" name="password" required onChange={(e) => setContrasenna(e.target.value)}/>
         </div>
         <button type="submit" disabled={loading}>
