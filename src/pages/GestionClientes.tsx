@@ -54,7 +54,7 @@ const GestionClientes = () => {
 
     const createCliente = async (cliente: ClienteCreateDto) => {
         const clienteF = await crearCliente(cliente);
-        if (clienteF) {
+        if (clienteF != null) {
             toast.success("Cliente creado con exito")
         }
     }
@@ -62,7 +62,7 @@ const GestionClientes = () => {
     const deleteCliente = async (id : number) => {
         const clienteF = await eliminarCliente(id);
         console.log(clienteF)
-        if (clienteF) {
+        if (clienteF != null) {
             toast.success("Cliente eliminado con exito")
         }
     }
@@ -74,6 +74,9 @@ const GestionClientes = () => {
 
     const updateCliente = async (cliente : ClienteUpdateDto) => {
         const clienteF = await editarCliente(cliente);
+        if (clienteF != null) {
+            toast.success("Cliente editado con exito")
+        }
         return clienteF;
     }
 

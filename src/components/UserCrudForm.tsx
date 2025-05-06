@@ -4,8 +4,8 @@ import { ClienteResponseDto } from "../dto/ClienteResponseDto";
 import ClienteCreateDto from "../dto/ClienteCreateDto";
 import ClienteUpdateDto from "../dto/ClienteUpdateDto";
 
-export default function UserCrudForm(props: { 
-    veterinariaId: number, 
+export default function UserCrudForm(props: {
+    veterinariaId: number,
     createCliente: (cliente: ClienteCreateDto) => Promise<void>,
     deleteCliente: (id: number) => Promise<void>,
     findCliente: (id: number) => Promise<ClienteResponseDto | null>,
@@ -24,7 +24,7 @@ export default function UserCrudForm(props: {
         const key = event.key;
         const allowedKeys = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab"];
         const isNumber = /^[0-9]$/.test(key);
-      
+
         if (!isNumber && !allowedKeys.includes(key)) {
             event.preventDefault();
             toast.warn("Error: no puedes colocar letras en este campo");
@@ -103,61 +103,38 @@ export default function UserCrudForm(props: {
             toast.warn("Debe ingresar un ID válido para buscar");
             return;
         }
-
-        try {
-            const cliente = await findCliente(id);
-            if (cliente) {
-                setNombre(cliente.nombre);
-                setApellido(cliente.apellido);
-                setFechaNacimiento(new Date(cliente.fechaNacimiento));
-                setCedula(cliente.cedula);
-                toast.success("Cliente encontrado");
-            } else {
-                toast.warn("No se encontró un cliente con ese ID");
-                limpiarCampos();
-            }
-        } catch (error) {
-            toast.error("Error al buscar el cliente");
-            console.error(error);
+        const cliente = await findCliente(id);
+        if (cliente != null) {
+            setNombre(cliente.nombre);
+            setApellido(cliente.apellido);
+            setFechaNacimiento(new Date(cliente.fechaNacimiento));
+            setCedula(cliente.cedula);
         }
+
     };
 
     const handleClickGuardar = async () => {
         if (!validarClienteCreate()) return;
-        
-        try {
-            await createCliente(construirClienteCreate());
-            toast.success("Cliente creado correctamente");
-            limpiarCampos();
-        } catch (error) {
-            toast.error("Error al crear el cliente");
-            console.error(error);
-        }
+
+        await createCliente(construirClienteCreate());
+        limpiarCampos();
     };
 
     const handleClickActualizar = async () => {
         if (!validarClienteUpdate()) return;
-        
-        try {
-            await updateCliente(construirClienteUpdate());
-            toast.success("Cliente actualizado correctamente");
-        } catch (error) {
-            toast.error("Error al actualizar el cliente");
-            console.error(error);
-        }
+
+        await updateCliente(construirClienteUpdate());
+
+        limpiarCampos();
+
     };
 
     const handleClickEliminar = async () => {
         if (!validarClienteDelete()) return;
-        
-        try {
-            await deleteCliente(id!);
-            toast.success("Cliente eliminado correctamente");
-            limpiarCampos();
-        } catch (error) {
-            toast.error("Error al eliminar el cliente");
-            console.error(error);
-        }
+
+        await deleteCliente(id!);
+        limpiarCampos();
+
     };
 
     const limpiarCampos = () => {
@@ -172,62 +149,62 @@ export default function UserCrudForm(props: {
         <>
             <div>
                 <label htmlFor="id">Id</label>
-                <input 
-                    type="text" 
-                    id="id" 
-                    name="id" 
-                    value={id || ''} 
-                    onKeyDown={handleKeyDownNumberVerificator} 
-                    onChange={(e) => setId(parseInt(e.target.value) || undefined)} 
+                <input
+                    type="text"
+                    id="id"
+                    name="id"
+                    value={id || ''}
+                    onKeyDown={handleKeyDownNumberVerificator}
+                    onChange={(e) => setId(parseInt(e.target.value) || undefined)}
                 />
                 <button onClick={handleClickBuscar}>Buscar Cliente</button>
             </div>
             <div>
                 <label htmlFor="nombre">Nombre</label>
-                <input 
-                    type="text" 
-                    id="nombre" 
-                    name="nombre" 
-                    value={nombre} 
-                    onChange={(e) => setNombre(e.target.value)} 
+                <input
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
                 />
             </div>
             <div>
                 <label htmlFor="apellido">Apellido</label>
-                <input 
-                    type="text" 
-                    id="apellido" 
-                    name="apellido" 
-                    value={apellido} 
-                    onChange={(e) => setApellido(e.target.value)} 
+                <input
+                    type="text"
+                    id="apellido"
+                    name="apellido"
+                    value={apellido}
+                    onChange={(e) => setApellido(e.target.value)}
                 />
             </div>
             <div>
                 <label htmlFor="fecha">Fecha Nacimiento</label>
-                <input 
-                    type="date" 
-                    id="fecha" 
-                    name="fecha" 
-                    value={fechaNacimiento ? fechaNacimiento.toISOString().split('T')[0] : ''} 
-                    onChange={(e) => setFechaNacimiento(new Date(e.target.value))} 
+                <input
+                    type="date"
+                    id="fecha"
+                    name="fecha"
+                    value={fechaNacimiento ? fechaNacimiento.toISOString().split('T')[0] : ''}
+                    onChange={(e) => setFechaNacimiento(new Date(e.target.value))}
                 />
             </div>
             <div>
                 <label htmlFor="cedula">Cédula</label>
-                <input 
-                    type="text" 
-                    id="cedula" 
-                    name="cedula" 
-                    onKeyDown={handleKeyDownNumberVerificator} 
-                    value={cedula || ''} 
-                    onChange={(e) => setCedula(parseInt(e.target.value) || undefined)} 
+                <input
+                    type="text"
+                    id="cedula"
+                    name="cedula"
+                    onKeyDown={handleKeyDownNumberVerificator}
+                    value={cedula || ''}
+                    onChange={(e) => setCedula(parseInt(e.target.value) || undefined)}
                 />
             </div>
-            
-                <button onClick={handleClickGuardar}>Guardar Cliente</button>
-                <button onClick={handleClickActualizar}>Actualizar Cliente</button>
-                <button onClick={handleClickEliminar}>Eliminar Cliente</button>
-                <button onClick={limpiarCampos}>Limpiar Formulario</button>
+
+            <button onClick={handleClickGuardar}>Guardar Cliente</button>
+            <button onClick={handleClickActualizar}>Actualizar Cliente</button>
+            <button onClick={handleClickEliminar}>Eliminar Cliente</button>
+            <button onClick={limpiarCampos}>Limpiar Formulario</button>
         </>
     );
 }

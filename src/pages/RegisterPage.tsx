@@ -64,7 +64,9 @@ export default function () {
     }
 
     return (
-        <><h1> Registro </h1>
-        <RegisterForm loading={isLoading} onSumit={onSummit}></RegisterForm></>
+        <>
+            <h1> Registro </h1>
+            <RegisterForm loading={isLoading} onSumit={onSummit}></RegisterForm>
+        </>
     )
 }

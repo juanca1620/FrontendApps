@@ -57,7 +57,7 @@ const administradorSchema = yup.object().shape({
     
     fechaNacimiento: yup.date()
       .required('La fecha de nacimiento es obligatoria')
-      .max(new Date(), 'La fecha de nacimiento debe ser en el pasado'),
+      .max(new Date(Date.now() - 86400000), 'La fecha de nacimiento debe ser en el pasado'),
     
     cedula: yup.number()
       .required('La cédula no puede estar vacía')
